@@ -133,19 +133,19 @@ namespace Cliver.Wpf
             return ShowDialog(ProductName, get_icon(icon), question, new string[2] { "Yes", "No" }, 0, owner) == 0;
         }
 
-        public static int ShowDialog(string title, Icon icon, string message, string[] buttons, int default_button, Window owner, bool? button_autosize = null, bool? no_duplicate = null, bool? topmost = null)
+        public static int? ShowDialog(string title, Icon icon, string message, string[] buttons, int default_button, Window owner, bool? button_autosize = null, bool? no_duplicate = null, bool? topmost = null)
         {
             owner = owner ?? Owner;
             if (owner == null || owner.Dispatcher.CheckAccess())
                 return show_dialog(title, icon, message, buttons, default_button, owner, button_autosize, no_duplicate, topmost);
 
-            return (int)owner.Dispatcher.Invoke(() =>
+            return owner.Dispatcher.Invoke(() =>
            {
                return show_dialog(title, icon, message, buttons, default_button, owner, button_autosize, no_duplicate, topmost);
            });
         }
 
-        static int show_dialog(string title, Icon icon, string message, string[] buttons, int default_button, Window owner, bool? button_autosize = null, bool? no_duplicate = null, bool? top_most = null)
+        static int? show_dialog(string title, Icon icon, string message, string[] buttons, int default_button, Window owner, bool? button_autosize = null, bool? no_duplicate = null, bool? top_most = null)
         {
             string caller = null;
             if (no_duplicate ?? NoDuplicate)
@@ -178,7 +178,7 @@ namespace Cliver.Wpf
             mf.ShowInTaskbar = ShowInTaskbar;
             mf.Topmost = top_most ?? TopMost;
             //mf.TopLevel = top_most ?? TopLevel;
-            int result = mf.ShowDialog();
+            int? result = mf.ShowDialog();
 
             if (no_duplicate ?? NoDuplicate)
                 lock (callers2message)

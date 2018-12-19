@@ -70,9 +70,9 @@ namespace Cliver.Wpf
             Close();
         }
 
-        public int ClickedButton { get; private set; }
+        public int? ClickedButton { get; private set; } = null;
 
-        new public int ShowDialog()
+        new public int? ShowDialog()
         {
             base.ShowDialog();
             return ClickedButton;
