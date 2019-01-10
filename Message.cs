@@ -169,16 +169,19 @@ namespace Cliver.Wpf
                 }
             }
 
-            MessageWindow mf = new MessageWindow(title, icon, message, buttons, default_button, owner/*, button_autosize ?? ButtonAutosize*/);
-            if (ResourceDictionary != null)
+            int? result = Application.Current.Dispatcher.Invoke(delegate
             {
-                mf.Resources.MergedDictionaries.Clear();
-                mf.Resources.MergedDictionaries.Add(ResourceDictionary);
-            }
-            mf.ShowInTaskbar = ShowInTaskbar;
-            mf.Topmost = top_most ?? TopMost;
-            //mf.TopLevel = top_most ?? TopLevel;
-            int? result = mf.ShowDialog();
+                MessageWindow mf = new MessageWindow(title, icon, message, buttons, default_button, owner/*, button_autosize ?? ButtonAutosize*/);
+                if (ResourceDictionary != null)
+                {
+                    mf.Resources.MergedDictionaries.Clear();
+                    mf.Resources.MergedDictionaries.Add(ResourceDictionary);
+                }
+                mf.ShowInTaskbar = ShowInTaskbar;
+                mf.Topmost = top_most ?? TopMost;
+                //mf.TopLevel = top_most ?? TopLevel;
+                return mf.ShowDialog();
+            });
 
             if (no_duplicate ?? NoDuplicate)
                 lock (callers2message)
