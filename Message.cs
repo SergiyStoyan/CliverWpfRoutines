@@ -22,6 +22,12 @@ namespace Cliver.Wpf
     /// </summary>
     public static class Message
     {
+        static Message()
+        {
+            if (System.Windows.Application.Current == null)
+                new System.Windows.Application();
+        }
+
         /// <summary>
         /// Whether the message box must be displayed in the Windows taskbar.
         /// </summary>
