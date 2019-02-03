@@ -10,7 +10,6 @@
 using System;
 using System.Drawing;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -22,12 +21,6 @@ namespace Cliver.Wpf
     /// </summary>
     public static class Message
     {
-        static Message()
-        {
-            if (System.Windows.Application.Current == null)
-                new System.Windows.Application();
-        }
-
         /// <summary>
         /// Whether the message box must be displayed in the Windows taskbar.
         /// </summary>

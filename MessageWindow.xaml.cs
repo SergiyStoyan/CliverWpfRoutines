@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Drawing;
+using Cliver.Win;
 
 namespace Cliver.Wpf
 {
@@ -21,7 +12,7 @@ namespace Cliver.Wpf
         {
             InitializeComponent();
 
-            Icon = AssemblyRoutines.GetAppIconImageSource();
+            Icon = Win.AssemblyRoutines.GetAppIconImageSource();
             Title = caption;
             Owner = owner;
 
@@ -30,7 +21,7 @@ namespace Cliver.Wpf
             else
                 image.Source = icon.ToImageSource();
 
-            System.Drawing.Size s = Cliver.SystemInfo.GetCurrentScreenSize(new System.Drawing.Point((int)Left, (int)Top), true);
+            System.Drawing.Size s = Cliver.Win.SystemInfo.GetCurrentScreenSize(new System.Drawing.Point((int)Left, (int)Top), true);
             MaxWidth = s.Width * 3 / 4;
             MaxHeight = s.Height * 3 / 4;
 
