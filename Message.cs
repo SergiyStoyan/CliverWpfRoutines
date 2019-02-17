@@ -135,17 +135,33 @@ namespace Cliver.Wpf
         public static int? ShowDialog(string title, Icon icon, string message, string[] buttons, int default_button, Window owner, bool? button_autosize = null, bool? no_duplicate = null, bool? topmost = null)
         {
             owner = owner ?? Owner;
-            if (owner == null || owner.Dispatcher.CheckAccess())
-                return show_dialog(title, icon, message, buttons, default_button, owner, button_autosize, no_duplicate, topmost);
-
-            return owner.Dispatcher.Invoke(() =>
-           {
-               return show_dialog(title, icon, message, buttons, default_button, owner, button_autosize, no_duplicate, topmost);
-           });
+            if (owner != null)
+            {
+                int? result = null;
+                owner.Dispatcher.Invoke(() =>
+                {
+                    result = show_dialog(title, icon, message, buttons, default_button, owner, button_autosize, no_duplicate, topmost);
+                });
+                return result;
+            }
+            if (System.Threading.Thread.CurrentThread.GetApartmentState() != System.Threading.ApartmentState.STA)
+            {
+                int? result = null;
+                System.Threading.Thread thread = new System.Threading.Thread(() =>
+                    {
+                        result = show_dialog(title, icon, message, buttons, default_button, owner, button_autosize, no_duplicate, topmost);
+                    });
+                thread.SetApartmentState(System.Threading.ApartmentState.STA);
+                thread.Start();
+                thread.Join();
+                return result;
+            }
+            return show_dialog(title, icon, message, buttons, default_button, owner, button_autosize, no_duplicate, topmost);
         }
 
-        static int? show_dialog(string title, Icon icon, string message, string[] buttons, int default_button, Window owner, bool? button_autosize = null, bool? no_duplicate = null, bool? top_most = null)
+        static int? show_dialog(string title, Icon icon, string message, string[] buttons, int default_button, Window owner, bool? button_autosize = null, bool? no_duplicate = null, bool? topmost = null)
         {
+
             string caller = null;
             if (no_duplicate ?? NoDuplicate)
             {
@@ -168,19 +184,17 @@ namespace Cliver.Wpf
                 }
             }
 
-            int? result = Application.Current.Dispatcher.Invoke(delegate
+            MessageWindow mf = new MessageWindow(title, icon, message, buttons, default_button, owner/*, button_autosize ?? ButtonAutosize*/);
+            if (ResourceDictionary != null)
             {
-                MessageWindow mf = new MessageWindow(title, icon, message, buttons, default_button, owner/*, button_autosize ?? ButtonAutosize*/);
-                if (ResourceDictionary != null)
-                {
-                    mf.Resources.MergedDictionaries.Clear();
-                    mf.Resources.MergedDictionaries.Add(ResourceDictionary);
-                }
-                mf.ShowInTaskbar = ShowInTaskbar;
-                mf.Topmost = top_most ?? TopMost;
-                //mf.TopLevel = top_most ?? TopLevel;
-                return mf.ShowDialog();
-            });
+                mf.Resources.MergedDictionaries.Clear();
+                mf.Resources.MergedDictionaries.Add(ResourceDictionary);
+            }
+            mf.ShowInTaskbar = ShowInTaskbar;
+            mf.Topmost = topmost ?? TopMost;
+            //mf.TopLevel = top_most ?? TopLevel;
+
+            int? result = mf.ShowDialog();
 
             if (no_duplicate ?? NoDuplicate)
                 lock (callers2message)
