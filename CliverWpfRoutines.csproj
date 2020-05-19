@@ -8,11 +8,11 @@
     <OutputType>library</OutputType>
     <RootNamespace>Cliver.Wpf</RootNamespace>
     <AssemblyName>CliverWpfRoutines</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <Deterministic>true</Deterministic>
+    <Deterministic>false</Deterministic>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -87,8 +87,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CliverRoutines\CliverRoutines.csproj">
-      <Project>{b85a42c6-9145-4054-8939-4717b6edc060}</Project>
+    <ProjectReference Include="..\CliverRoutines\CliverRoutines.csproj">
+      <Project>{d14d063c-3198-4cfe-8d95-98328918f26f}</Project>
       <Name>CliverRoutines</Name>
     </ProjectReference>
     <ProjectReference Include="..\CliverWinRoutines\CliverWinRoutines.csproj">
