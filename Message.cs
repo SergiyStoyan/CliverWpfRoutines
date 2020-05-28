@@ -22,6 +22,11 @@ namespace Cliver.Wpf
     public static class Message
     {
         /// <summary>
+        /// The message window position on the screen
+        /// </summary>
+        public static WindowStartupLocation? Location = null;
+
+        /// <summary>
         /// Whether the message box must be displayed in the Windows taskbar.
         /// </summary>
         public static bool ShowInTaskbar = true;
@@ -132,7 +137,7 @@ namespace Cliver.Wpf
             return ShowDialog(ProductName, get_icon(icon), question, new string[2] { "Yes", "No" }, 0, owner) == 0;
         }
 
-        public static int? ShowDialog(string title, Icon icon, string message, string[] buttons, int default_button, Window owner, bool? button_autosize = null, bool? no_duplicate = null, bool? topmost = null)
+        public static int? ShowDialog(string title, Icon icon, string message, string[] buttons, int default_button, Window owner, bool? button_autosize = null, bool? no_duplicate = null, bool? topmost = null, WindowStartupLocation? location = null)
         {
             owner = owner ?? Owner;
             if (owner != null)
@@ -156,12 +161,11 @@ namespace Cliver.Wpf
                 thread.Join();
                 return result;
             }
-            return show_dialog(title, icon, message, buttons, default_button, owner, button_autosize, no_duplicate, topmost);
+            return show_dialog(title, icon, message, buttons, default_button, owner, button_autosize, no_duplicate, topmost, location);
         }
 
-        static int? show_dialog(string title, Icon icon, string message, string[] buttons, int default_button, Window owner, bool? button_autosize = null, bool? no_duplicate = null, bool? topmost = null)
+        static int? show_dialog(string title, Icon icon, string message, string[] buttons, int default_button, Window owner, bool? button_autosize = null, bool? no_duplicate = null, bool? topmost = null, WindowStartupLocation? location = null)
         {
-
             string caller = null;
             if (no_duplicate ?? NoDuplicate)
             {
@@ -192,7 +196,8 @@ namespace Cliver.Wpf
             }
             mf.ShowInTaskbar = ShowInTaskbar;
             mf.Topmost = topmost ?? TopMost;
-            //mf.TopLevel = top_most ?? TopLevel;
+            //mf.TopLevel = top_most ?? TopLevel;           
+            mf.WindowStartupLocation = location ?? (Location ?? (owner != null ? WindowStartupLocation.CenterOwner : WindowStartupLocation.CenterScreen));
 
             int? result = mf.ShowDialog();
 
