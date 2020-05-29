@@ -21,6 +21,28 @@ namespace Cliver.Wpf
     /// </summary>
     public static class Message
     {
+        //public static ResourceDictionary ResourceDictionary = null;//set style
+        //public static string ResourceDictionaryPath
+        //{
+        //    get
+        //    {
+        //        return resourceDictionaryPath;
+        //    }
+        //    set
+        //    {
+        //        resourceDictionaryPath = value;
+        //        if (resourceDictionaryPath != null)
+        //        {
+        //            ResourceDictionary = new ResourceDictionary();
+        //            Uri u = new System.Uri(resourceDictionaryPath, System.UriKind.Absolute);
+        //            System.Windows.Application.LoadComponent(ResourceDictionary, u);
+        //        }
+        //        else
+        //            ResourceDictionary = null;
+        //    }
+        //}
+        //static string resourceDictionaryPath = null;
+
         /// <summary>
         /// The message window position on the screen
         /// </summary>
@@ -189,11 +211,7 @@ namespace Cliver.Wpf
             }
 
             MessageWindow mf = new MessageWindow(title, icon, message, buttons, default_button, owner/*, button_autosize ?? ButtonAutosize*/);
-            if (ResourceDictionary != null)
-            {
-                mf.Resources.MergedDictionaries.Clear();
-                mf.Resources.MergedDictionaries.Add(ResourceDictionary);
-            }
+
             mf.ShowInTaskbar = ShowInTaskbar;
             mf.Topmost = topmost ?? TopMost;
             //mf.TopLevel = top_most ?? TopLevel;           
@@ -235,27 +253,5 @@ namespace Cliver.Wpf
                 default: throw new Exception("No option: " + icon);
             }
         }
-
-        public static ResourceDictionary ResourceDictionary = null;//set style
-        public static string ResourceDictionaryPath
-        {
-            get
-            {
-                return resourceDictionaryPath;
-            }
-            set
-            {
-                resourceDictionaryPath = value;
-                if (resourceDictionaryPath != null)
-                {
-                    ResourceDictionary = new ResourceDictionary();
-                    Uri u = new System.Uri(resourceDictionaryPath, System.UriKind.Absolute);
-                    System.Windows.Application.LoadComponent(ResourceDictionary, u);
-                }
-                else
-                    ResourceDictionary = null;
-            }
-        }
-        static string resourceDictionaryPath = null;
     }
 }

@@ -13,9 +13,17 @@ namespace Cliver.Wpf
 {
     public partial class MessageWindow : Window
     {
+        /// <summary>
+        /// Use styling resources defined in the entry assembly
+        /// </summary>
+        public static bool UseApplicationResources = true;
+
         public MessageWindow(string caption, Icon icon, string message, string[] buttons, int default_button, Window owner)
         {
             InitializeComponent();
+
+            if (UseApplicationResources)
+                Resources = Application.Current.Resources;
 
             Icon = Win.AssemblyRoutines.GetAppIconImageSource();
             Title = caption;
