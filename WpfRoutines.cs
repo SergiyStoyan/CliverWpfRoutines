@@ -17,6 +17,45 @@ namespace Cliver.Wpf
 {
     static public class Routines
     {
+        public static void SetReadOnly(this DependencyObject o, bool readOnly)
+        {
+            foreach (DependencyObject c in EnumChildren(o))
+            {
+                UIElement cc = c as UIElement;
+                if (cc == null)
+                    continue;
+                if (cc.EnumChildren().FirstOrDefault() != null)
+                    continue;
+                cc.Focusable = !readOnly;
+                cc.IsHitTestVisible = !readOnly;
+                //cc.IsEnabled = !readOnly;
+            }
+        }
+
+        public static IEnumerable<DependencyObject> EnumChildren(this DependencyObject o)
+        {
+            foreach (object oo in LogicalTreeHelper.GetChildren(o))
+            {
+                DependencyObject c = oo as DependencyObject;
+                if (c == null)
+                    continue;
+                   yield return c;
+                foreach (DependencyObject cc in EnumChildren(c))
+                    yield return cc;
+            }
+        }
+
+        public static IEnumerable<T> EnumChildrenOfType<T>(this DependencyObject ob)
+            where T : DependencyObject
+        {
+            foreach (var c in ob.EnumChildren())
+            {
+                T cc = c as T;
+                if (cc != null)
+                    yield return cc;
+            }
+        }
+
         public static void AddFadeEffect(this System.Windows.Window window, double durationMss)
         {
             window.IsVisibleChanged += (object sender, DependencyPropertyChangedEventArgs e) =>
@@ -122,7 +161,8 @@ namespace Cliver.Wpf
         {
             if (depObj != null)
             {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                int childCount = VisualTreeHelper.GetChildrenCount(depObj);
+                for (int i = 0; i < childCount; i++)
                 {
                     DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
 
@@ -133,33 +173,6 @@ namespace Cliver.Wpf
                         yield return childOfChild;
                 }
             }
-        }
-
-        public static IEnumerable<T> FindChildrenOfType<T>(this DependencyObject ob)
-            where T : DependencyObject
-        {
-            foreach (var child in ob.GetChildren())
-            {
-                T castedChild = child as T;
-                if (castedChild != null)
-                {
-                    yield return castedChild;
-                }
-                else
-                {
-                    foreach (var internalChild in FindChildrenOfType<T>(child))
-                    {
-                        yield return internalChild;
-                    }
-                }
-            }
-        }
-
-        public static IEnumerable<DependencyObject> GetChildren(this DependencyObject ob)
-        {
-            int childCount = VisualTreeHelper.GetChildrenCount(ob);
-            for (int i = 0; i < childCount; i++)
-                yield return VisualTreeHelper.GetChild(ob, i);
         }
 
         public static T GetVisualChild<T>(this Visual parent) where T : Visual
