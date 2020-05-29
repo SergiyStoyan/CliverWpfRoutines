@@ -14,7 +14,7 @@ namespace Cliver.Wpf
     public partial class MessageWindow : Window
     {
         /// <summary>
-        /// Use styling resources defined in the entry assembly
+        /// Use styling resources defined in the entry assembly.
         /// </summary>
         public static bool UseApplicationResources = true;
 
