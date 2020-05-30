@@ -17,14 +17,25 @@ namespace Cliver.Wpf
 {
     static public class Routines
     {
+        public static IEnumerable<DependencyObject> EnumLogicalParents(this DependencyObject o)
+        {
+            DependencyObject p = LogicalTreeHelper.GetParent(o);
+            if (p != null)
+            {
+                yield return p;
+                foreach (DependencyObject pp in EnumLogicalParents(p))
+                    yield return pp;
+            }
+        }
+
         public static void SetReadOnly(this DependencyObject o, bool readOnly)
         {
-            foreach (DependencyObject c in EnumChildren(o))
+            foreach (DependencyObject c in EnumLogicalChildren(o))
             {
                 UIElement cc = c as UIElement;
                 if (cc == null)
                     continue;
-                if (cc.EnumChildren().FirstOrDefault() != null)
+                if (cc.EnumLogicalChildren().FirstOrDefault() != null)
                     continue;
                 cc.Focusable = !readOnly;
                 cc.IsHitTestVisible = !readOnly;
@@ -32,23 +43,23 @@ namespace Cliver.Wpf
             }
         }
 
-        public static IEnumerable<DependencyObject> EnumChildren(this DependencyObject o)
+        public static IEnumerable<DependencyObject> EnumLogicalChildren(this DependencyObject o)
         {
             foreach (object oo in LogicalTreeHelper.GetChildren(o))
             {
                 DependencyObject c = oo as DependencyObject;
                 if (c == null)
                     continue;
-                   yield return c;
-                foreach (DependencyObject cc in EnumChildren(c))
+                yield return c;
+                foreach (DependencyObject cc in EnumLogicalChildren(c))
                     yield return cc;
             }
         }
 
-        public static IEnumerable<T> EnumChildrenOfType<T>(this DependencyObject ob)
+        public static IEnumerable<T> EnumLogicalChildrenOfType<T>(this DependencyObject ob)
             where T : DependencyObject
         {
-            foreach (var c in ob.EnumChildren())
+            foreach (var c in ob.EnumLogicalChildren())
             {
                 T cc = c as T;
                 if (cc != null)
@@ -146,6 +157,17 @@ namespace Cliver.Wpf
             }
 
             return valid;
+        }
+
+        public static IEnumerable<DependencyObject> EnumVisualParents(this DependencyObject o)
+        {
+            DependencyObject p = VisualTreeHelper.GetParent(o);
+            if (p != null)
+            {
+                yield return p;
+                foreach (DependencyObject pp in EnumVisualParents(p))
+                    yield return pp;
+            }
         }
 
         public static T FindVisualParentOfType<T>(this DependencyObject dp)
