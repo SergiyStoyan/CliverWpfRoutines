@@ -37,8 +37,8 @@ namespace Cliver.Wpf
                 image.Source = icon.ToImageSource();
 
             System.Drawing.Size s = Cliver.Win.SystemInfo.GetCurrentScreenSize(new System.Drawing.Point((int)Left, (int)Top), true);
-            MaxWidth = s.Width * 3 / 4;
-            MaxHeight = s.Height * 3 / 4;
+            MaxWidth = SystemParameters.PrimaryScreenWidth * 3 / 4;
+            MaxHeight = SystemParameters.PrimaryScreenHeight * 3 / 4;
 
             this.message.Text = message;
 
@@ -65,8 +65,10 @@ namespace Cliver.Wpf
 
             Loaded += delegate
             {
-                if (ActualWidth == MaxWidth)
-                    this.message.Width = this.canvas.ActualWidth;
+                if (ActualWidth >= MaxWidth)
+                    this.Width = MaxWidth;
+                if (ActualHeight >= MaxHeight)
+                    this.Height = MaxHeight;
             };
         }
 

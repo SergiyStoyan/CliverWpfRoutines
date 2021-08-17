@@ -8,9 +8,9 @@ using System.Windows;
 [assembly: AssemblyTitle("CliverWpfRoutines")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("CliverSoft")]
+[assembly: AssemblyCompany("Sergey Stoyan, CliverSoft")]
 [assembly: AssemblyProduct("CliverWpfRoutines")]
-[assembly: AssemblyCopyright("Copyright © CliverSoft 2018-2020")]
+[assembly: AssemblyCopyright("Copyright © CliverSoft 2018-2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -49,5 +49,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2.3.*")]
+[assembly: AssemblyVersion("1.2.4.*")]
 //[assembly: AssemblyFileVersion("1.0.0.0")]
