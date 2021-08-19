@@ -33,13 +33,10 @@
                             <ColumnDefinition Width="auto"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                    <Image Grid.Row="1" Grid.Column="0" Name="image" Stretch="None" Margin="0,0,10,0" VerticalAlignment="Top" ></Image>
-            <!--<ScrollViewer Grid.Row="1" Grid.Column="1" Height="auto" Name="canvas">
-                          HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Stretch"-->
+                    <Image Grid.Row="1" Grid.Column="0" Name="image" Stretch="UniformToFill" Margin="0,0,10,0" VerticalAlignment="Top" Width="32" Height="32"  ></Image>
             <TextBox Name="message" Grid.Row="1" Grid.Column="1" Background="Transparent" BorderThickness="0" HorizontalAlignment="Stretch"  IsReadOnly="True" TextWrapping="Wrap"  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
          ScrollViewer.VerticalScrollBarVisibility="Auto"
                          ></TextBox>
-            <!--</ScrollViewer>-->
         </Grid>
         <UniformGrid Name="buttonPanel" FlowDirection="RightToLeft" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="1" Rows="1" Margin="0, 20, 0, 0" DockPanel.Dock="Bottom">
             

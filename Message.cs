@@ -84,33 +84,33 @@ namespace Cliver.Wpf
 
         public static void Inform(string message, Window owner = null)
         {
-            ShowDialog(ProductName, SystemIcons.Information, message, new string[1] { "OK" }, 0, owner);
+            ShowDialog(ProductName, getIcon(Icons.Information), message, new string[1] { "OK" }, 0, owner);
         }
 
         public static void Exclaim(string message, Window owner = null)
         {
-            ShowDialog(ProductName, SystemIcons.Exclamation, message, new string[1] { "OK" }, 0, owner);
+            ShowDialog(ProductName, getIcon(Icons.Exclamation), message, new string[1] { "OK" }, 0, owner);
         }
 
         public static void Exclaim(Exception e, Window owner = null)
         {
             if (!ShowDetailsOnException)
-                ShowDialog(ProductName, SystemIcons.Exclamation, e.Message, new string[1] { "OK" }, 0, owner);
+                ShowDialog(ProductName, getIcon(Icons.Exclamation), e.Message, new string[1] { "OK" }, 0, owner);
             else
-                ShowDialog(ProductName, SystemIcons.Exclamation, GetExceptionDetails(e), new string[1] { "OK" }, 0, owner);
+                ShowDialog(ProductName, getIcon(Icons.Exclamation), GetExceptionDetails(e), new string[1] { "OK" }, 0, owner);
         }
 
         public static void Warning(string message, Window owner = null)
         {
-            ShowDialog(ProductName, SystemIcons.Warning, message, new string[1] { "OK" }, 0, owner);
+            ShowDialog(ProductName, getIcon(Icons.Warning), message, new string[1] { "OK" }, 0, owner);
         }
 
         public static void Warning(Exception e, Window owner = null)
         {
             if (!ShowDetailsOnException)
-                ShowDialog(ProductName, SystemIcons.Warning, e.Message, new string[1] { "OK" }, 0, owner);
+                ShowDialog(ProductName, getIcon(Icons.Warning), e.Message, new string[1] { "OK" }, 0, owner);
             else
-                ShowDialog(ProductName, SystemIcons.Warning, GetExceptionDetails(e), new string[1] { "OK" }, 0, owner);
+                ShowDialog(ProductName, getIcon(Icons.Warning), GetExceptionDetails(e), new string[1] { "OK" }, 0, owner);
         }
 
         public static void Error(Exception e, Window owner = null)
@@ -118,7 +118,7 @@ namespace Cliver.Wpf
             if (!ShowDetailsOnException)
                 Error(e.Message, owner);
             else
-                ShowDialog(ProductName, SystemIcons.Error, GetExceptionDetails(e), new string[1] { "OK" }, 0, owner);
+                ShowDialog(ProductName, getIcon(Icons.Error), GetExceptionDetails(e), new string[1] { "OK" }, 0, owner);
         }
 
         public static string GetExceptionDetails(Exception e)
@@ -150,17 +150,19 @@ namespace Cliver.Wpf
 
         public static void Error(string message, Window owner = null)
         {
-            ShowDialog(ProductName, SystemIcons.Error, message, new string[1] { "OK" }, 0, owner);
+            ShowDialog(ProductName, getIcon( Icons.Error), message, new string[1] { "OK" }, 0, owner);
         }
 
         public static bool YesNo(string question, Window owner = null, Icons icon = Icons.Question)
         {
-            return ShowDialog(ProductName, get_icon(icon), question, new string[2] { "Yes", "No" }, 0, owner) == 0;
+            return ShowDialog(ProductName, getIcon(icon), question, new string[2] { "Yes", "No" }, 0, owner) == 0;
         }
 
         public static int? ShowDialog(string title, Icon icon, string message, string[] buttons, int default_button, Window owner, bool? button_autosize = null, bool? no_duplicate = null, bool? topmost = null, WindowStartupLocation? location = null)
         {
             owner = owner ?? Owner;
+            if (owner != null && !owner.IsVisible)
+                owner = null;
             if (owner != null)
             {
                 int? result = null;
@@ -235,22 +237,49 @@ namespace Cliver.Wpf
             Question,
             Exclamation,
         }
-        static Icon get_icon(Icons icon)
+        //static Icon get_icon(Icons icon)
+        //{
+        //    switch (icon)
+        //    {
+        //        case Icons.Information:
+        //            return SystemIcons.Information;
+        //        case Icons.Warning:
+        //            return SystemIcons.Warning;
+        //        case Icons.Error:
+        //            return SystemIcons.Error;
+        //        case Icons.Question:
+        //            return SystemIcons.Question;
+        //        case Icons.Exclamation:
+        //            return SystemIcons.Exclamation;
+        //        default: throw new Exception("No option: " + icon);
+        //    }
+        //}
+        static Icon getIcon(Icons icon)
         {
+            WinApi.Shell32.SHSTOCKICONID iId;
             switch (icon)
             {
                 case Icons.Information:
-                    return SystemIcons.Information;
+                    iId = WinApi.Shell32.SHSTOCKICONID.SIID_INFO;
+                    break;
                 case Icons.Warning:
-                    return SystemIcons.Warning;
+                    iId = WinApi.Shell32.SHSTOCKICONID.SIID_WARNING;
+                    break;
                 case Icons.Error:
-                    return SystemIcons.Error;
+                    iId = WinApi.Shell32.SHSTOCKICONID.SIID_ERROR;
+                    break;
                 case Icons.Question:
-                    return SystemIcons.Question;
+                    iId = WinApi.Shell32.SHSTOCKICONID.SIID_HELP;
+                    break;
                 case Icons.Exclamation:
-                    return SystemIcons.Exclamation;
+                    iId = WinApi.Shell32.SHSTOCKICONID.SIID_WARNING;
+                    break;
                 default: throw new Exception("No option: " + icon);
             }
+            var sii = new WinApi.Shell32.SHSTOCKICONINFO();
+            sii.cbSize = (UInt32)System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinApi.Shell32.SHSTOCKICONINFO));
+            WinApi.Shell32.SHGetStockIconInfo(iId, WinApi.Shell32.SHGSI.SHGSI_ICON, ref sii);
+            return Icon.FromHandle(sii.hIcon);
         }
     }
 }
